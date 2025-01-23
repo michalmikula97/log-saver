@@ -12,11 +12,12 @@ class LogMessage(BaseModel):
 
 app = FastAPI()
 
-LOG_DIR = "./data"
+CURRENT_DIR = os.path.dirname(__file__)
+LOG_DIR = CURRENT_DIR + "/data"
 LOG_FILE = os.path.join(LOG_DIR, "logs.txt")
 
-templates = Jinja2Templates(directory="templates")
-app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory=CURRENT_DIR + "/templates")
+app.mount("/static", StaticFiles(directory=CURRENT_DIR + "/static",html=True), name="static")
 
 @app.get("/", response_class=JSONResponse)
 async def read_root(request: Request):
