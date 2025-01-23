@@ -41,6 +41,10 @@ async def get_logs():
         logs = f.read()
     return JSONResponse(content={"logs": logs})
 
+@app.get("/ping")
+async def get_pong():
+    return {"message": "pong"}
+
 @app.get("/error")
 async def trigger_error():
     # This will raise an exception, effectively "crashing" the app
