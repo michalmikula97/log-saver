@@ -1,14 +1,15 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ],
+  "extends": ["config:recommended"],
+  "prHourlyLimit": 10,
   "packageRules": [
     {
-      "matchManagers": ["pip_requirements"],
-      "matchPackagePatterns": ["^fastapi$", "^uvicorn$"],
-      "groupName": "python-dependencies",
-      "automerge": false
+      "groupName": "Minor and patch updates",
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "groupName": "Major updates",
+      "matchUpdateTypes": ["major"]
     }
   ]
 }
