@@ -4,12 +4,12 @@
   "prHourlyLimit": 10,
   "packageRules": [
     {
-      "groupName": "Minor and patch updates",
-      "matchUpdateTypes": ["minor", "patch"]
+      "groupName": "All Non-Docker Dependencies",
+      "matchDatasources": ["pypi"]
     },
     {
-      "groupName": "Major updates",
-      "matchUpdateTypes": ["major"]
+      "groupName": "Docker Image Updates",
+      "matchDatasources": ["docker"]
     }
   ]
 }
