@@ -35,7 +35,7 @@ async def log_text(text: str = Form(...)):
 @app.get("/logs")
 async def get_logs():
     if not os.path.exists(LOG_FILE) or os.stat(LOG_FILE).st_size == 0:
-        return JSONResponse(content={"logs": "No logs yet."})
+        return JSONResponse(content={"logs": "No logs were stored yet."})
 
     with open(LOG_FILE, "r") as f:
         logs = f.read()
