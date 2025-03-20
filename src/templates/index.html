@@ -8,13 +8,20 @@
 </head>
 <body style="text-align: center; font-family: Arial, sans-serif;">
     <h1>TEST APP</h1>
-    <form onsubmit="logText(event)">
+    
+    <h2>Add a Book:</h2>
+    <form onsubmit="addBook(event)">
         <div style="margin-bottom: .6em;">
-          <input type="text" id="text-input" style="width: 15%;" name="text" placeholder="Enter text" required>
+            <input type="text" id="title-input" style="width: 15%;" name="title" placeholder="Title" required>
+            <input type="text" id="author-input" style="width: 15%;" name="author" placeholder="Author" required>
         </div>
-        <button type="submit">Log Text</button>
+        <button type="submit">Add Book</button>
     </form>
-    <h2>Log Entries:</h2>
-    <pre id="log-display" style="border: 1px solid #ccc; padding: 10px; background: #f9f9f9; text-align: left; display: inline-block;"></pre>
+
+    <h2>Books (Database):</h2>
+    <pre id="books-display" style="border: 1px solid #ccc; padding: 10px; background: #f9f9f9; text-align: left; display: inline-block;"></pre>
+    
+    <h2>Log Entries (File):</h2>
+    <pre id="log-display" style="border: 1px solid #ccc; padding: 10px; background: #f9f9f9; text-align: left; display: inline-block; max-height: 300px; overflow-y: auto; white-space: pre-wrap;"></pre>
 </body>
 </html>
