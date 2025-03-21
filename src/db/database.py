@@ -6,8 +6,7 @@ from logger import logger
 from config import config
 
 CURRENT_DIR = os.path.dirname(__file__)
-LOG_DIR = CURRENT_DIR + "/data"
-LOG_FILE = os.path.join(LOG_DIR, "logs.txt")
+SQL_FILE = os.path.join(CURRENT_DIR, "create_books.sql")
 
 class Database:
 
@@ -16,6 +15,7 @@ class Database:
         self.retry_delay = 1 
         self.max_delay = 300 # 5 min
         self.reconnect()
+        self.ensure_books_table()
 
     def connect_db(self):
         try:
@@ -46,7 +46,6 @@ class Database:
         
     def get_cursor(self):
         if self.connection is None or self.connection.closed:
-            logger.warning("Lost connection to database. Reconnecting...")
             self.reconnect()
 
         if self.connection:
@@ -67,7 +66,8 @@ class Database:
             logger.error(f"Error fetching books: {error}")
             return []
         finally:
-            cursor.close()
+            if cursor:
+                cursor.close()
 
     def insert_book(self, title, author):
         """Insert a new book into the database."""
@@ -85,4 +85,42 @@ class Database:
         except Exception as error:
             logger.error(f"Error inserting book: {error}")
         finally:
-            cursor.close()
+            if cursor:
+                cursor.close()
+
+    def ensure_books_table(self):
+        """Check if books table exists; if not, create it."""
+        cursor = self.get_cursor()
+        if cursor is None:
+            return
+        try:
+            cursor.execute("SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'books')")
+            exists = cursor.fetchone()[0]
+            if not exists:
+                logger.info("Table 'books' not found. Creating table...")
+                self.create_books_table()
+            else:
+                logger.info("Table 'books' exists.")
+        except Exception as error:
+            logger.error(f"Error checking books table: {error}")
+            self.connection.rollback()
+        finally:
+            if cursor:
+                cursor.close()
+
+    def create_books_table(self):
+        """Run SQL script to create books table."""
+        cursor = self.get_cursor()
+        if cursor is None:
+            return
+        try:
+            with open(SQL_FILE, "r") as sql_file:
+                sql_script = sql_file.read()
+            cursor.execute(sql_script)
+            self.connection.commit()
+            logger.info("Table 'books' created successfully.")
+        except Exception as error:
+            logger.error(f"Error creating books table: {error}")
+        finally:
+            if cursor:
+                cursor.close()
